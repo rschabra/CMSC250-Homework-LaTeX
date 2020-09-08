@@ -1,0 +1,426 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX Template for UMD Assignments.
+% Created by Jason Filippou (jasonfil@cs.umd.edu)
+% Maintained at: https://github.com/JasonFil/UMDAssignmentTemplates
+% Check LICENSE file on GitHub for licensing. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Document class will always be extarticle for the purposes of UMD assignments
+\documentclass[letterpaper,14pt]{extarticle}
+
+%%%%%%%%%%%%%  IMPORT MACRO FILES AS NEEDED %%%%%%%%%%%
+\usepackage{amsgen,amsmath,amstext,amsbsy,amsopn,amssymb,amsthm,stackengine}
+\usepackage{breqn} % For breaking equations.
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{array, nicefrac, mathtools}
+\usepackage[bottom]{footmisc} % To keep the footnote at the bottom even after putting answering environments.
+\usepackage{verbatim}
+\usepackage{booktabs} % for multicolumn
+\usepackage[font=normalsize,skip=0pt, justification=centering]{caption, subcaption}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\usepackage{float,relsize,setspace,enumitem,pbox,cleveref,multicol,multirow}
+\usepackage{censor}
+\usepackage{textcomp} % for the cent symbol
+\usepackage{multido}
+\usepackage{bbding} % Has a checkmark symbol reachable through \Checkmark
+\usepackage{tikz,mdframed}
+\usepackage{epsdice} 
+
+% Basic math
+%\usepackage{amsgen,amsmath,amstext,amsbsy,amsopn,amssymb,amsthm}
+%\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+%\usepackage{array, nicefrac, mathtools}
+
+% Theorems, definitions, equations, lemmas
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{defn}{Definition}
+\newtheorem{rem}[thm]{Remark}
+\numberwithin{equation}{section}
+\newtheorem*{defn*}{Definition} % Theorem environments with no numbering
+\newtheorem*{prop*}{Proposition}
+\newtheorem*{thm*}{Theorem}
+
+% For negation and quantifiers in Discrete Math
+\newcommand{\shortsim}{\raise.17ex\hbox{$\scriptstyle \sim$}}
+\renewcommand{\neg}{\shortsim}
+\renewcommand{\nexists}{\neg(\exists}
+\newcommand{\nequiv}{\ensuremath{\not\equiv}}
+
+\newcommand{\myline}[1]{\underline{\hspace{#1}}}
+\newcounter{parts}
+\newcounter{problems}[parts]
+\newcounter{questions}[problems]
+\newcounter{subquestions}[questions]
+\newcommand{\hwpart}[1]{
+	\stepcounter{parts}
+	\noindent\makebox[\textwidth]{\LARGE \bf Part \arabic{parts} - #1}
+	\\
+}
+\newcommand{\problem}[2]{\stepcounter{problems} {\Large \bf \noindent Problem \arabic{problems}: #1 \emph{(#2 pts)}} \\[.4cm]}
+\newcommand{\question}[2]{\stepcounter{questions} \noindent{\emph{\Large Question (\alph{questions}): #1 (#2 pts) }\\[.4cm]}}
+\newcommand{\subquestion}[2]{\stepcounter{subquestions} \noindent{\emph{\Large Subquestion (\roman{subquestions}): #1 (#2 pts) }\\[.4cm]}}
+
+% Solution formatting
+\newcommand{\solution}[1]{{\color{red}{#1}}}
+% Some standard centering and italicization of text.
+\newcommand{\frontrowcenter}[1]{\begin{center}{\em \Large  #1  }\end{center}}
+
+% A blank page
+\newcommand{\blankpage}{
+\clearpage
+\vspace*{\fill}
+	\begin{minipage}{\textwidth}
+		 \Large \textbf{THIS PAGE INTENTIONALLY LEFT BLANK}\\
+	\end{minipage}
+\vfill % equivalent to \vspace{\fill}
+\clearpage
+}
+
+\newcommand{\answerspace}[1]{
+	\begin{center}
+		\textbf{BEGIN YOUR ANSWER BELOW THIS LINE} \\ \hrulefill \vspace{#1} \\ \hrulefill
+	\end{center}
+}
+
+\newcommand{\answerspacefullpage}{
+	\begin{center}
+		\textbf{BEGIN YOUR ANSWER BELOW THIS LINE} \\ \hrulefill \pagebreak
+	\end{center}
+}
+
+\newcommand{\additionalanswerspace}[1]{
+	\begin{center}
+		\textbf{CONTINUE YOUR ANSWER BELOW THIS LINE } \\ \hrulefill \vspace{#1} \\ \hrulefill
+	\end{center}
+}
+
+\newcommand{\additionalanswerspacefullpage}{
+	\begin{center}
+		\textbf{CONTINUE YOUR ANSWER BELOW THIS LINE} \\ \hrulefill \pagebreak
+	\end{center}
+}
+
+\newcommand{\freespace}[1]{
+	\begin{center}
+		\large \textbf{SCRAP SPACE BELOW} \\ 
+		\hrulefill
+		\pagebreak 
+	\end{center}
+}
+
+% Centered line
+\newcommand{\mycenterline}[1]{
+	\begin{center}
+		\myline{#1}
+	\end{center}
+}
+
+% Space for T/F:
+\newcommand{\tfline}{\myline{.5cm}}
+
+% For quick parenthesized and italicized point annotation.
+\newcommand{\pts}[1]{{\em (#1 pts)}}
+\newcommand{\onept}{{\em (1 pt)}}
+
+% \item environments coupled with a line at the end, for students to write T and F in.
+\newcommand{\tfitem}[1]{\item #1 \null\hfill \framebox(25,25){} \\ \hdashrule{0.95\textwidth}{1pt}{2pt}}
+\newcommand{\setitem}[1]{\tfitem{$\curlybraces{#1}$} }
+\newcommand{\lineitem}[2]{\item #1 \null \hfill \myline{#2}}
+
+% Some circles and squares for students to fill in.
+\newcommand{\whitecircle}[1]{\tikz[baseline=-0.5ex]\draw[black, radius=#1] (0,0) circle ;}
+\newcommand{\whitesquare}[1]{\tikz\draw[black] (0,0) rectangle(#1, #1) ;}
+
+% Emphasis
+\newcommand{\F}{$\mathbf{F}$}
+\newcommand{\T}{$\mathbf{T}$}
+\newcommand{\False}{\textbf{False}}
+\newcommand{\false}{\textbf{false}}
+\newcommand{\True}{\textbf{True}}
+\newcommand{\true}{\textbf{true}}
+\newcommand{\TODO}{\textcolor{red}{\textbf{TODO}}}
+\newcommand{\TBD}{\textcolor{red}{\textbf{TBD}}}
+\newcommand{\codeemph}[1]{\texttt{\textbf{#1}}}
+\newcommand{\Red}{\textcolor{red}{Red}}
+\newcommand{\red}{\textcolor{red}{red}}
+\newcommand{\makered}[1]{\textcolor{red}{#1}}
+\newcommand{\Rbbst}{\textcolor{red}{Red}-black tree}
+\newcommand{\rbbst}{\textcolor{red}{red}-black tree}
+
+\newcommand{\nullc}{\texttt{\textbackslash 0}}
+\newcommand{\SPC}{\texttt{SPC}}
+\newcommand{\checkmarkifsoln}{\ifshowsoln \textcolor{red}{\Checkmark} \fi}
+\newcommand{\dialitem}[2]{\item[-] \textbf{#1}: ``\textit{#2}"} % For dialogue building.
+% Repeating commands many times!
+\newcommand{\Repeat}{\multido{\i=1+1}} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  STUDENTS - Below, write your name, UID, and section number in place of the relevant "\myline{}" command.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\homeworkdata}[6]{
+\begin{mdframed}[linewidth=1pt]
+    \noindent\makebox[\textwidth]{\LARGE \bf #1, #2 }
+    \Repeat{2}{\\}
+    \noindent\makebox[\textwidth]{\Large \bf  Homework \##3 }
+      \Repeat{2}{\\}
+       \noindent\makebox[\textwidth]{\large \bf  Due: #4 (on-time)}
+    \Repeat{2}{\\}
+    \noindent\makebox[\textwidth]{\large \bf \hspace{1.5in} #5 (late, #6\% of credit) }
+    \Repeat{2}{\\}
+    \noindent\makebox[\textwidth]{\large \bf  \textbf{\underline{First}} \& \textbf{\underline{Last}} Name: \enspace Rohan Chabra}
+    \Repeat{2}{\\}
+    \noindent\makebox[\textwidth]{\large \bf  UID (9 digits): \enspace 114466990}
+    \Repeat{2}{\\}
+    \noindent\makebox[\textwidth]{\large \bf Section number (4 digits): \enspace 0207}
+    \\
+\end{mdframed}
+}
+
+\usepackage[inner=1cm,outer=1cm,top=1cm,bottom=2cm]{geometry}
+\setlength{\parindent}{2em}
+\setlength{\itemindent}{.5in}
+
+% Title of the current document
+\title{CMSC250, Fall '20: Homework \#1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  STUDENTS - Your homework begins here.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\homeworkdata{CMSC 250}{Fall 2020}{1}{Wednesday 09-09, 11:59pm}{Thursday 09-10, 11:59pm}{80}
+
+\vspace{.2in} 
+\hwpart{Material From Tuesday, 09-01}
+\\
+
+\problem{Converting Logic and English}{40}
+\question{Logic to English}{20}
+% \vspace{-.1in} 
+
+Translate each propositional logic expression into an English sentence.\\
+\indent Use the following logical symbols:
+\begin{itemize}
+	\item Let $p$ = "It is raining."
+	\item Let $q$ = "It is cloudy."
+	\item Let $r$ = "The weather is bad."
+\end{itemize}
+
+\begin{enumerate}[label = (\alph*)]
+	\lineitem {$p \land q$} {0 in} It is raining and it is cloudy.
+	\lineitem {$(\neg p) \lor (\neg q)$} {0 in} Either it is not raining or it is not cloudy.
+	\lineitem {$(p \lor q) \Rightarrow r$} {0 in} If it is either raining or it is cloudy, then the weather is bad.
+			\null \hfill
+	\lineitem {$(\neg r) \Leftrightarrow ((\neg p) \land (\neg q))$}{.5 in}The weather is not bad, if and only if it is not raining and it is not cloudy.
+			\null \hfill 
+\end{enumerate}
+
+\pagebreak
+
+\question{English to Logic}{20}
+
+Translate each English sentence into a propositional logic expression. Note that the \emph{truth value} of the statement is irrelevant - we want the direct translation, no matter whether the statement is true or false.\\
+
+Use the following logical symbols:
+\begin{itemize}
+	\item Let $x$ = "Alice has ingredients."
+	\item Let $y$ = "Alice has a recipe."
+	\item Let $z$ = "Alice can bake a cake."
+\end{itemize}
+
+\begin{enumerate}[label = (\alph*)]
+	\item {Alice has a recipe and ingredients.\\\\}
+    {$y \land x$}  
+	\item {Either Alice can bake a cake, or Alice does not have a recipe (or both).\\\\}
+	{$z \lor (\neg y)$}
+	\item {If Alice has ingredients and Alice has a recipe, then Alice can bake a cake.\\\\}
+	{$(x \land y) \Rightarrow z$}
+	\item {Alice can bake a cake, if and only if she has ingredients or does not have a recipe (or both).\\\\}
+	{$z \Leftrightarrow (x \lor (\neg y))$}
+\end{enumerate}
+
+\pagebreak
+
+\problem{Truth Tables}{60}
+\question{A simple one}{30}
+
+Fill-in the truth table below, which was built for the expression:
+
+{\Large $$((\neg p) \land q) \lor (r \land p)$$ } 
+
+\begin{center}
+	\begin{table}[H] 
+		\large 
+		\setlength{\tabcolsep}{16pt}
+%		\renewcommand{\arraystretch}{1.2}
+		\begin{tabular}{|c|c|c|c|c|c|c| p{5.25in}|} \hline 
+			$p$ & $q$ & $r$ & $\neg p$ & $(\neg p) \land q$ & $r \land p$ & $((\neg p) \land q) \lor (r \land p)$\\ \hline
+			\F & \F & \F & \T & \F & \F & \F  \\ \hline 		
+			\F & \F & \T & \T & \F & \F & \F \\ \hline 		
+			\F & \T & \F & \T & \T & \F & \T  \\ \hline 		
+			\F & \T & \T & \T & \T & \F & \T \\ \hline
+			\T & \F & \F & \F & \F & \F & \F \\ \hline 		
+			\T & \F & \T & \F & \F & \T & \T \\ \hline
+			\T & \T & \F & \F & \F & \F & \F \\ \hline 		
+			\T & \T & \T & \F & \F & \T & \T \\ \hline												
+		\end{tabular}
+	\end{table}
+\end{center}
+%
+
+\begin{itemize}
+	\lineitem {Is this expression a \textbf{tautology}, a \textbf{contradiction}, or a \textbf{contingency} (a statement that is neither a tautology nor a contradiction)?\\}{0 in} This expression is a \textbf{contingency}.
+\end{itemize}
+
+\pagebreak
+
+\question{A less simple one}{30}
+
+Perform the exact same task for the following truth table, built for the expression: 
+
+{\Large $$[(p \land (\neg p)) \land q] \Rightarrow r$$} 
+
+
+\begin{center}
+	\begin{table}[H] 
+		\large 
+		\setlength{\tabcolsep}{16pt}
+%		\renewcommand{\arraystretch}{1.2}
+		\begin{tabular}{|c|c|c|c|c|c|c|} \hline 
+			$p$ & $q$ & $r$ & $\neg p$ & $p \land (\neg p)$ & $(p \land (\neg p)) \land q$ & $[(p \land (\neg p)) \land q] \Rightarrow r$ \\
+			\F & \F & \F & \T & \F & \F & \T  \\ \hline 		
+			\F & \F & \T & \T & \F & \F & \T \\ \hline 		
+			\F & \T & \F & \T & \F & \F & \T \\ \hline 		
+			\F & \T & \T & \T & \F & \F & \T \\ \hline
+			\T & \F & \F & \F & \T & \F & \T \\ \hline 		
+			\T & \F & \T & \F & \T & \F & \T \\ \hline
+			\T & \T & \F & \F & \F & \F & \T \\ \hline 		
+			\T & \T & \T & \F & \F & \F & \T \\ \hline											
+		\end{tabular}
+	\end{table}
+\end{center}
+%
+
+\begin{itemize}
+	\lineitem {Is this expression a \textbf{tautology}, a \textbf{contradiction}, or a \textbf{contingency} (a statement that is neither a tautology nor a contradiction)?\\}{0 in} This expression is a \textbf{tautology}.
+\end{itemize}
+
+\pagebreak
+
+\hwpart{Material From Thursday, 09-03}
+
+\problem{Proving Logical Equivalence}{60}
+\question{Using a Truth Table}{30}
+
+Observe the following propositional logic expressions:
+
+\vspace{.2in}
+
+$$\mathlarger{ p \Rightarrow (q \lor r)}$$
+$$\mathlarger{ \big (p \land (\neg q)\big ) \Rightarrow r }$$ 
+
+\vspace{.3in}
+
+
+
+Prove that the above expressions are \emph{logically equivalent} using a \textbf{truth table}.
+
+
+\answerspacefullpage
+\begin{center}
+	\begin{table}[H] 
+		\large 
+		\setlength{\tabcolsep}{16pt}
+%		\renewcommand{\arraystretch}{1.2}
+		\begin{tabular}{|c|c|c|c|c|} \hline 
+			$p$ & $q$ & $r$ & $q \lor r$ & $p \Rightarrow (q \lor r)$ \\
+			\F & \F & \F & \F & \T \\ \hline 		
+			\F & \F & \T & \T & \T \\ \hline 		
+			\F & \T & \F & \T & \T \\ \hline 		
+			\F & \T & \T & \T & \T \\ \hline
+			\T & \F & \F & \F & \F \\ \hline 		
+			\T & \F & \T & \T & \T \\ \hline
+			\T & \T & \F & \T & \T \\ \hline 		
+			\T & \T & \T & \T & \T \\ \hline											
+		\end{tabular}
+	\end{table}
+\end{center}	
+\hline
+\vspace{.2 in}
+\textbf{The final column of both tables are identical, therefore the two expressions are equivalent.}
+\vspace{.2 in}
+\hline
+\begin{center}
+	\begin{table}[H] 
+		\large 
+		\setlength{\tabcolsep}{16pt}
+%		\renewcommand{\arraystretch}{1.2}
+		\begin{tabular}{|c|c|c|c|c|c|} \hline 
+			$p$ & $q$ & $r$ & $\neg q$ & $p \land (\neg q)$ & $(p \land (\neg q)) \Rightarrow r$\\
+			\F & \F & \F & \T & \F & \T \\ \hline 		
+			\F & \F & \T & \T & \F & \T \\ \hline 		
+			\F & \T & \F & \F & \F & \T \\ \hline 		
+			\F & \T & \T & \F & \F & \T \\ \hline
+			\T & \F & \F & \T & \T & \F \\ \hline 		
+			\T & \F & \T & \T & \T & \T \\ \hline
+			\T & \T & \F & \F & \F & \T \\ \hline 		
+			\T & \T & \T & \F & \T & \T \\ \hline											
+		\end{tabular}
+	\end{table}
+\end{center}
+\additionalanswerspacefullpage
+
+
+\question{Using Epp's laws of Propositional Logic}{30}
+
+Observe the following propositional logic expressions:
+
+\vspace{.2in}
+
+$$\mathlarger{\neg( (x \lor z) \Rightarrow y) \lor z}$$
+$$\mathlarger{(x \lor z) \land ((\neg y) \lor z) }$$ 
+
+\vspace{.3in}
+
+Prove that the above expressions are \emph{logically equivalent} using the \textbf{laws of\\ propositional logic}. Note that, every time you apply a law of propositional logic, you need to document it on the right of the derivation. That way \textit{we} know that {\em you} know what law you are applying.
+
+\answerspacefullpage
+$$\mathlarger{\neg( (x \lor z) \Rightarrow y) \lor z}$$
+\additionalanswerspacefullpage
+
+\problem{Understanding Logical Expressions}{40}
+\question{Working with conditionals}{15}
+
+Consider the following English sentence:
+
+\begin{center}
+	\emph{If my laptop is plugged in, then it charges overnight.}
+\end{center}
+
+Write the \textbf{converse}, \textbf{inverse}, and \textbf{contrapositive} of this statement.
+
+\begin{enumerate}[label=(\alph*)]
+	\item Converse \\\\\\
+	\item Inverse \\\\\\
+	\item Contrapositive \\\\\\
+\end{enumerate}
+\pagebreak
+\question{Simplifying}{25}
+Using Epp's axioms of propositional logic equivalence, simplify the following compound statement \textbf{as much as possible}. For every derivation you make, write down the axiom you apply on the right of the derivation (e.g law of associativity, De Morgan's law, etc).
+
+$$[(w \land (x \Rightarrow y)) \lor (x \land (\neg z))] \lor (\neg w)$$
+
+\answerspacefullpage
+\additionalanswerspacefullpage
+
+\freespace
+
+\end{document}
